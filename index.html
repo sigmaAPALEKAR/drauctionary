@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Drauctionary</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="container">
+    <h1 class="title">drauctionary</h1>
+    <input type="text" id="search" placeholder="search for a word..." />
+    <div id="drauctionary"></div>
+  </div>
+
+  <div id="modal" class="modal">
+    <div class="modal-content">
+      <span id="closeModal" class="close">&times;</span>
+      <h2 id="modalWord"></h2>
+      <p><strong>meaning:</strong> <span id="modalMeaning"></span></p>
+      <p><strong>etymology:</strong> <span id="modalEtymology"></span></p>
+      <p><strong>example:</strong> <span id="modalExample"></span></p>
+    </div>
+  </div>
+
+  <script src="data.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
