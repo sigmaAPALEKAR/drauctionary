@@ -1,11 +1,9 @@
-/* Fonts and body */
 body {
   background-color: #0d0d0d;
   color: #f0f0f0;
   font-family: 'Roboto', sans-serif;
   margin: 0;
   padding: 0;
-  overflow-x: hidden;
 }
 
 header {
@@ -18,7 +16,6 @@ h1 {
   color: #3b82f6;
   font-size: 3rem;
   margin-bottom: 1rem;
-  text-shadow: 0 2px 8px rgba(0,0,0,0.5);
 }
 
 #searchInput {
@@ -37,7 +34,6 @@ h1 {
   color: #888;
 }
 
-/* Word list */
 #wordList {
   display: flex;
   flex-direction: column;
@@ -50,49 +46,24 @@ h1 {
   font-size: 2.2rem;
   margin: 1.5rem 0;
   cursor: pointer;
-  opacity: 0;
-  transform: translateY(20px);
-  transition: transform 0.3s ease, opacity 0.5s ease, color 0.2s ease, text-shadow 0.2s ease;
 }
 
-.word-item.visible {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-.word-item:hover {
-  color: #3b82f6;
-  text-shadow: 0 0 8px #3b82f6;
-  transform: scale(1.08);
-}
-
-/* References inside modal */
 .reference {
   color: #3b82f6;
   cursor: pointer;
   text-decoration: underline;
-  transition: transform 0.2s ease, text-shadow 0.2s ease;
 }
 
-.reference:hover {
-  text-shadow: 0 0 8px #3b82f6;
-  transform: scale(1.05);
-}
-
-/* Modal */
 .modal {
   display: none;
   position: fixed;
   z-index: 1000;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0,0,0,0.85);
-  backdrop-filter: blur(5px);
+  left: 0; top: 0;
+  width: 100%; height: 100%;
+  background-color: rgba(0,0,0,0.95);
+  display: flex;
   align-items: center;
   justify-content: center;
-  animation: fadeIn 0.3s ease;
 }
 
 .modal-content {
@@ -102,15 +73,6 @@ h1 {
   width: 90%;
   max-width: 600px;
   color: #e0e0e0;
-  animation: slideUp 0.3s ease;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.7);
-}
-
-.modal-content h2 {
-  font-family: 'Raleway', sans-serif;
-  color: #3b82f6;
-  margin-top: 0;
-  text-shadow: 0 1px 6px rgba(0,0,0,0.5);
 }
 
 .close {
@@ -120,25 +82,9 @@ h1 {
   cursor: pointer;
 }
 
-.close:hover {
-  color: #fff;
-}
-
-/* Footer */
 footer {
   text-align: center;
   padding: 1rem 0;
   font-size: 0.9rem;
   color: #555;
-}
-
-/* Animations */
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-
-@keyframes slideUp {
-  from { transform: translateY(40px); opacity: 0; }
-  to { transform: translateY(0); opacity: 1; }
 }
