@@ -11,8 +11,10 @@ async function loadData() {
     const modal = document.getElementById('modal');
     const closeModal = document.getElementById('closeModal');
 
+    // render the list of words
     function renderWords(filter = '') {
       wordList.innerHTML = '';
+
       const filtered = data.filter(entry =>
         entry.word.toLowerCase().includes(filter.toLowerCase())
       );
@@ -21,11 +23,15 @@ async function loadData() {
         const div = document.createElement('div');
         div.classList.add('word-item');
         div.textContent = entry.word;
+
+        // only open modal when clicked
         div.addEventListener('click', () => openModal(entry));
+
         wordList.appendChild(div);
       });
     }
 
+    // open modal
     function openModal(entry) {
       document.getElementById('modalWord').textContent = entry.word;
       document.getElementById('modalMeaning').textContent = entry.meaning;
@@ -34,6 +40,7 @@ async function loadData() {
       modal.style.display = 'flex';
     }
 
+    // close modal
     function close() {
       modal.style.display = 'none';
     }
@@ -42,11 +49,16 @@ async function loadData() {
     window.onclick = e => { if (e.target === modal) close(); };
     window.addEventListener('keydown', e => { if (e.key === 'Escape') close(); });
 
+    // initial render
     renderWords();
+
+    // search filtering
     searchInput.addEventListener('input', e => renderWords(e.target.value));
+
   } catch (err) {
     console.error('Error loading data.json:', err);
   }
 }
 
+// call loadData
 loadData();
