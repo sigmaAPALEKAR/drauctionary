@@ -42,13 +42,22 @@ async function loadData() {
       modal.style.display = 'flex';
     }
 
-    closeModal.onclick = () => {
+    function closeModalFunc() {
       modal.style.display = 'none';
-    };
+    }
+
+    closeModal.onclick = closeModalFunc;
 
     window.onclick = e => {
-      if (e.target === modal) modal.style.display = 'none';
+      if (e.target === modal) closeModalFunc();
     };
+
+    // escape key closes modal
+    window.addEventListener('keydown', e => {
+      if (e.key === 'Escape' && modal.style.display === 'flex') {
+        closeModalFunc();
+      }
+    });
   } catch (err) {
     console.error('Error loading data.json:', err);
   }
