@@ -3,19 +3,17 @@ async function loadData() {
     const response = await fetch('data.json');
     const data = await response.json();
 
-    // sort alphabetically by word
-    data.sort((a, b) => a.word.localeCompare(b.word));
+    data.sort((a,b) => a.word.localeCompare(b.word));
 
     const wordList = document.getElementById('wordList');
     const searchInput = document.getElementById('searchInput');
 
     function renderWords(filter = '') {
       wordList.innerHTML = '';
-      const filteredData = data.filter(entry =>
+      const filtered = data.filter(entry =>
         entry.word.toLowerCase().includes(filter.toLowerCase())
       );
-
-      filteredData.forEach(entry => {
+      filtered.forEach(entry => {
         const item = document.createElement('div');
         item.classList.add('word-item');
         item.textContent = entry.word;
@@ -30,7 +28,7 @@ async function loadData() {
       renderWords(e.target.value);
     });
 
-    // modal behavior
+    // modal
     const modal = document.getElementById('modal');
     const closeModal = document.getElementById('closeModal');
 
@@ -47,18 +45,15 @@ async function loadData() {
     }
 
     closeModal.onclick = closeModalFunc;
+    window.onclick = e => { if (e.target === modal) closeModalFunc(); }
 
-    window.onclick = e => {
-      if (e.target === modal) closeModalFunc();
-    };
-
-    // escape key closes modal
+    // ESC closes modal
     window.addEventListener('keydown', e => {
       if (e.key === 'Escape' && modal.style.display === 'flex') {
         closeModalFunc();
       }
     });
-  } catch (err) {
+  } catch(err) {
     console.error('Error loading data.json:', err);
   }
 }
