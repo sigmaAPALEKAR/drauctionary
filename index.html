@@ -1,122 +1,30 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Drauctionary</title>
-<style>
-  body {
-    background-color: #121212;
-    color: #e0e0e0;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    margin: 0;
-    padding: 20px;
-  }
-  h1 {
-    text-align: center;
-    margin-bottom: 20px;
-    font-weight: 600;
-    letter-spacing: 1px;
-  }
-  #search {
-    width: 100%;
-    padding: 12px;
-    margin-bottom: 30px;
-    border: none;
-    border-radius: 8px;
-    background-color: #1e1e1e;
-    color: #e0e0e0;
-    font-size: 16px;
-  }
-  #search::placeholder {
-    color: #888;
-  }
-  .cards-container {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 20px;
-  }
-  .card {
-    background-color: #1e1e1e;
-    border-radius: 12px;
-    padding: 20px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.5);
-    transition: transform 0.2s, box-shadow 0.2s;
-  }
-  .card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 6px 20px rgba(0,0,0,0.7);
-  }
-  .card h2 {
-    margin: 0 0 10px 0;
-    font-size: 20px;
-    color: #ffcc00;
-  }
-  .card p {
-    margin: 6px 0;
-    font-size: 14px;
-    line-height: 1.4;
-  }
-  .label {
-    font-weight: bold;
-    color: #ccc;
-  }
-  @media (max-width: 600px) {
-    .cards-container {
-      grid-template-columns: 1fr;
-    }
-  }
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Drauctionary</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
+  <header>
+    <h1>Drauctionary</h1>
+    <input type="text" id="searchInput" placeholder="search" />
+  </header>
 
-<h1>Drauctionary</h1>
-<input type="text" id="search" placeholder="Search slang words...">
+  <main id="wordList"></main>
 
-<div class="cards-container" id="cards-container">
-  <!-- cards will appear here -->
-</div>
+  <!-- Modal -->
+  <div id="modal" class="modal">
+    <div class="modal-content">
+      <span id="closeModal" class="close">&times;</span>
+      <h2 id="modalWord"></h2>
+      <p><strong>meaning:</strong> <span id="modalMeaning"></span></p>
+      <p><strong>etymology:</strong> <span id="modalEtymology"></span></p>
+      <p><strong>example:</strong> <em id="modalExample"></em></p>
+    </div>
+  </div>
 
-<script>
-let drauctionaryData = [];
-
-// fetch data.json
-fetch('data.json')
-  .then(response => response.json())
-  .then(data => {
-    drauctionaryData = data.sort((a,b) => a.word.localeCompare(b.word));
-    renderCards(drauctionaryData);
-  })
-  .catch(err => console.error("Error loading data.json:", err));
-
-function renderCards(data) {
-  const container = document.getElementById('cards-container');
-  container.innerHTML = '';
-  data.forEach(entry => {
-    const card = document.createElement('div');
-    card.className = 'card';
-    card.innerHTML = `
-      <h2>${entry.word}</h2>
-      <p><span class="label">Meaning:</span> ${entry.meaning}</p>
-      <p><span class="label">Etymology:</span> ${entry.etymology}</p>
-      <p><span class="label">Example:</span> ${entry["example sentence"]}</p>
-    `;
-    container.appendChild(card);
-  });
-}
-
-// search filter
-document.getElementById('search').addEventListener('input', e => {
-  const query = e.target.value.toLowerCase();
-  const filtered = drauctionaryData.filter(entry =>
-    entry.word.toLowerCase().includes(query) ||
-    entry.meaning.toLowerCase().includes(query) ||
-    entry.etymology.toLowerCase().includes(query) ||
-    entry["example sentence"].toLowerCase().includes(query)
-  );
-  renderCards(filtered);
-});
-</script>
-
+  <script src="script.js"></script>
 </body>
 </html>
