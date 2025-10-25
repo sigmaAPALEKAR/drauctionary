@@ -3,7 +3,7 @@ async function loadData() {
     const response = await fetch('data.json');
     const data = await response.json();
 
-    // Sort alphabetically
+    // sort alphabetically
     data.sort((a, b) => a.word.localeCompare(b.word));
 
     const wordList = document.getElementById('wordList');
@@ -22,22 +22,9 @@ async function loadData() {
         item.addEventListener('click', () => openModal(entry));
         wordList.appendChild(item);
       });
-
-      // Scroll animation
-      const wordItems = document.querySelectorAll('.word-item');
-      const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('visible');
-          }
-        });
-      }, { threshold: 0.1 });
-
-      wordItems.forEach(item => observer.observe(item));
     }
 
     renderWords();
-
     searchInput.addEventListener('input', e => renderWords(e.target.value));
 
     // modal
@@ -46,14 +33,13 @@ async function loadData() {
 
     function openModal(entry) {
       document.getElementById('modalWord').textContent = entry.word;
-      
-      // convert references in meaning and etymology to clickable spans
+
+      // convert references to clickable spans
       function linkify(text) {
+        // match "Also see X" or just individual words
         return text.replace(/\b([A-Za-z0-9!?.]+)\b/g, (match) => {
-          // check if the word exists in data
-          if (data.some(d => d.word.toLowerCase() === match.toLowerCase())) {
-            return `<span class="reference">${match}</span>`;
-          }
+          const target = data.find(d => d.word.toLowerCase() === match.toLowerCase());
+          if (target) return `<span class="reference">${match}</span>`;
           return match;
         });
       }
