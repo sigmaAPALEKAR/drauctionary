@@ -126,13 +126,10 @@ h1 {
 
 /* Footer */
 footer {
-  text-align: right;
-  padding: 1rem 2rem;
+  text-align: center;
+  padding: 1rem 0;
   font-size: 0.9rem;
   color: #555;
-  position: fixed;
-  bottom: 0;
-  width: 100%;
 }
 
 /* Animations */
