@@ -1,4 +1,4 @@
-/* Use Roboto for body, Raleway for headers */
+/* Fonts */
 body {
   background-color: #0d0d0d;
   color: #f0f0f0;
@@ -104,12 +104,15 @@ h1 {
   color: #fff;
 }
 
-/* Footer */
+/* Footer credit */
 footer {
-  text-align: center;
-  padding: 1rem;
+  text-align: right;
+  padding: 1rem 2rem;
   font-size: 0.9rem;
-  color: #888;
+  color: #555;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
 }
 
 /* Animations */
