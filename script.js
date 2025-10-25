@@ -1,87 +1,57 @@
-// alphabetically sort and display entries
-function renderDrauctionary(data) {
-  data.sort((a, b) => a.word.localeCompare(b.word));
-  const container = document.getElementById("drauctionary");
-  container.innerHTML = "";
+async function loadData() {
+  try {
+    const response = await fetch('data.json');
+    const data = await response.json();
 
-  const grouped = {};
-  data.forEach(entry => {
-    const letter = entry.word[0].toUpperCase();
-    if (!grouped[letter]) grouped[letter] = [];
-    grouped[letter].push(entry);
-  });
+    // sort alphabetically by word
+    data.sort((a, b) => a.word.localeCompare(b.word));
 
-  for (const letter in grouped) {
-    const section = document.createElement("div");
-    const header = document.createElement("h2");
-    header.textContent = letter;
-    section.appendChild(header);
+    const wordList = document.getElementById('wordList');
+    const searchInput = document.getElementById('searchInput');
 
-    grouped[letter].forEach(entry => {
-      const div = document.createElement("div");
-      div.className = "word";
-      div.textContent = entry.word;
-      div.addEventListener("click", () => openModal(entry));
-      section.appendChild(div);
+    function renderWords(filter = '') {
+      wordList.innerHTML = '';
+      const filteredData = data.filter(entry =>
+        entry.word.toLowerCase().includes(filter.toLowerCase())
+      );
+
+      filteredData.forEach(entry => {
+        const item = document.createElement('div');
+        item.classList.add('word-item');
+        item.textContent = entry.word;
+        item.addEventListener('click', () => openModal(entry));
+        wordList.appendChild(item);
+      });
+    }
+
+    renderWords();
+
+    searchInput.addEventListener('input', e => {
+      renderWords(e.target.value);
     });
-    container.appendChild(section);
+
+    // modal behavior
+    const modal = document.getElementById('modal');
+    const closeModal = document.getElementById('closeModal');
+
+    function openModal(entry) {
+      document.getElementById('modalWord').textContent = entry.word;
+      document.getElementById('modalMeaning').textContent = entry.meaning;
+      document.getElementById('modalEtymology').textContent = entry.etymology;
+      document.getElementById('modalExample').textContent = entry['example sentence'];
+      modal.style.display = 'flex';
+    }
+
+    closeModal.onclick = () => {
+      modal.style.display = 'none';
+    };
+
+    window.onclick = e => {
+      if (e.target === modal) modal.style.display = 'none';
+    };
+  } catch (err) {
+    console.error('Error loading data.json:', err);
   }
 }
 
-// make "see" references clickable
-function linkReferences(text, data) {
-  const seeRegex = /(See|Also see)\s+([\w\s2!]+)/gi;
-  return text.replace(seeRegex, (match, prefix, refWord) => {
-    const target = data.find(e => e.word.toLowerCase() === refWord.toLowerCase());
-    if (target) {
-      return `${prefix} <a class="ref" onclick="scrollToWord('${target.word}')">${target.word}</a>`;
-    }
-    return match;
-  });
-}
-
-// open modal
-function openModal(entry) {
-  const modal = document.getElementById("modal");
-  document.getElementById("modalWord").textContent = entry.word;
-  document.getElementById("modalMeaning").innerHTML = linkReferences(entry.meaning, drauctionaryData);
-  document.getElementById("modalEtymology").innerHTML = linkReferences(entry.etymology, drauctionaryData);
-  document.getElementById("modalExample").textContent = entry.example;
-  modal.style.display = "block";
-}
-
-// close modal
-document.getElementById("closeModal").addEventListener("click", () => {
-  document.getElementById("modal").style.display = "none";
-});
-
-window.onclick = function(event) {
-  const modal = document.getElementById("modal");
-  if (event.target == modal) modal.style.display = "none";
-};
-
-// scroll to referenced word
-function scrollToWord(word) {
-  const allWords = document.querySelectorAll(".word");
-  for (let w of allWords) {
-    if (w.textContent.toLowerCase() === word.toLowerCase()) {
-      w.scrollIntoView({ behavior: "smooth", block: "center" });
-      w.style.backgroundColor = "#3a3a3a";
-      setTimeout(() => (w.style.backgroundColor = ""), 1200);
-      break;
-    }
-  }
-  document.getElementById("modal").style.display = "none";
-}
-
-// search
-document.getElementById("search").addEventListener("input", e => {
-  const q = e.target.value.toLowerCase();
-  const words = document.querySelectorAll(".word");
-  words.forEach(w => {
-    w.style.display = w.textContent.toLowerCase().includes(q) ? "block" : "none";
-  });
-});
-
-// initialize
-renderDrauctionary(drauctionaryData);
+loadData();
