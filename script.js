@@ -22,6 +22,18 @@ async function loadData() {
         item.addEventListener('click', () => openModal(entry));
         wordList.appendChild(item);
       });
+
+      // Scroll animation
+      const wordItems = document.querySelectorAll('.word-item');
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+          }
+        });
+      }, { threshold: 0.1 });
+
+      wordItems.forEach(item => observer.observe(item));
     }
 
     renderWords();
@@ -34,10 +46,31 @@ async function loadData() {
 
     function openModal(entry) {
       document.getElementById('modalWord').textContent = entry.word;
-      document.getElementById('modalMeaning').textContent = entry.meaning;
-      document.getElementById('modalEtymology').textContent = entry.etymology;
+      
+      // convert references in meaning and etymology to clickable spans
+      function linkify(text) {
+        return text.replace(/\b([A-Za-z0-9!?.]+)\b/g, (match) => {
+          // check if the word exists in data
+          if (data.some(d => d.word.toLowerCase() === match.toLowerCase())) {
+            return `<span class="reference">${match}</span>`;
+          }
+          return match;
+        });
+      }
+
+      document.getElementById('modalMeaning').innerHTML = linkify(entry.meaning);
+      document.getElementById('modalEtymology').innerHTML = linkify(entry.etymology);
       document.getElementById('modalExample').textContent = entry['example sentence'];
+
       modal.style.display = 'flex';
+
+      // add click listeners for references
+      document.querySelectorAll('.reference').forEach(ref => {
+        ref.addEventListener('click', () => {
+          const targetEntry = data.find(d => d.word.toLowerCase() === ref.textContent.toLowerCase());
+          if (targetEntry) openModal(targetEntry);
+        });
+      });
     }
 
     function closeModalFunc() {
@@ -46,9 +79,9 @@ async function loadData() {
 
     closeModal.onclick = closeModalFunc;
     window.onclick = e => { if (e.target === modal) closeModalFunc(); }
-    window.addEventListener('keydown', e => { if (e.key === 'Escape' && modal.style.display === 'flex') closeModalFunc(); })
+    window.addEventListener('keydown', e => { if (e.key === 'Escape' && modal.style.display === 'flex') closeModalFunc(); });
 
-  } catch (err) {
+  } catch(err) {
     console.error('Error loading data.json:', err);
   }
 }
