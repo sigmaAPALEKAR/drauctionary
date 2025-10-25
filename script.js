@@ -2,6 +2,7 @@ async function loadData() {
   const response = await fetch('data.json');
   const data = await response.json();
 
+  // sort alphabetically
   data.sort((a, b) => a.word.localeCompare(b.word));
 
   const wordList = document.getElementById('wordList');
@@ -26,30 +27,10 @@ async function loadData() {
 
   function openModal(entry) {
     document.getElementById('modalWord').textContent = entry.word;
-
-    function linkify(text) {
-      if (!text) return '';
-      return text.replace(/\b([A-Za-z0-9!?.]+)\b/g, word => {
-        const target = data.find(d => d.word.toLowerCase() === word.toLowerCase());
-        if (target) return `<span class="reference">${word}</span>`;
-        return word;
-      });
-    }
-
-    document.getElementById('modalMeaning').innerHTML = linkify(entry.meaning);
-    document.getElementById('modalEtymology').innerHTML = linkify(entry.etymology);
+    document.getElementById('modalMeaning').textContent = entry.meaning;
+    document.getElementById('modalEtymology').textContent = entry.etymology;
     document.getElementById('modalExample').textContent = entry['example sentence'] || '';
-
-    // show modal
     modal.style.display = 'flex';
-
-    // clickable references
-    document.querySelectorAll('.reference').forEach(ref => {
-      ref.onclick = () => {
-        const targetEntry = data.find(d => d.word.toLowerCase() === ref.textContent.toLowerCase());
-        if (targetEntry) openModal(targetEntry);
-      };
-    });
   }
 
   function close() {
