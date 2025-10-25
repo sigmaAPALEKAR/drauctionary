@@ -3,7 +3,8 @@ async function loadData() {
     const response = await fetch('data.json');
     const data = await response.json();
 
-    data.sort((a,b) => a.word.localeCompare(b.word));
+    // Sort alphabetically
+    data.sort((a, b) => a.word.localeCompare(b.word));
 
     const wordList = document.getElementById('wordList');
     const searchInput = document.getElementById('searchInput');
@@ -13,6 +14,7 @@ async function loadData() {
       const filtered = data.filter(entry =>
         entry.word.toLowerCase().includes(filter.toLowerCase())
       );
+
       filtered.forEach(entry => {
         const item = document.createElement('div');
         item.classList.add('word-item');
@@ -24,9 +26,7 @@ async function loadData() {
 
     renderWords();
 
-    searchInput.addEventListener('input', e => {
-      renderWords(e.target.value);
-    });
+    searchInput.addEventListener('input', e => renderWords(e.target.value));
 
     // modal
     const modal = document.getElementById('modal');
@@ -46,14 +46,9 @@ async function loadData() {
 
     closeModal.onclick = closeModalFunc;
     window.onclick = e => { if (e.target === modal) closeModalFunc(); }
+    window.addEventListener('keydown', e => { if (e.key === 'Escape' && modal.style.display === 'flex') closeModalFunc(); })
 
-    // ESC closes modal
-    window.addEventListener('keydown', e => {
-      if (e.key === 'Escape' && modal.style.display === 'flex') {
-        closeModalFunc();
-      }
-    });
-  } catch(err) {
+  } catch (err) {
     console.error('Error loading data.json:', err);
   }
 }
